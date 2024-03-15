@@ -23,16 +23,16 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    // userDetailService
-    @Bean
-    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
-        UserDetails userDetails = User.builder()
-                .username("user1")
-                .password(passwordEncoder().encode("1111"))
-                .roles("USER")
-                .build();
-        return new InMemoryUserDetailsManager(userDetails);
-    }
+    // userDetailService 구현체
+//    @Bean
+//    public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
+//        UserDetails userDetails = User.builder()
+//                .username("user1")
+//                .password(passwordEncoder().encode("1111"))
+//                .roles("USER")
+//                .build();
+//        return new InMemoryUserDetailsManager(userDetails);
+//    }
 
     // 요청 경로에 대한 설정 변경 ->  인가가 필요한 리소스 설정
     @Bean
@@ -40,12 +40,11 @@ public class SecurityConfig {
             http.authorizeHttpRequests(auth -> {
                 // 로그인 필요가 없이 접근이 가능하도록 설정하는 메소드 .permitAll();
                 auth.requestMatchers("/sample/all").permitAll();
+                auth.requestMatchers("/sample/index").permitAll();
                 // 페이지 경로에 역할을 부여하여 로그인 또는 그 역할이 맞는 지 확인 후 페이지 리턴하는 메소드 .hasRole();
                 auth.requestMatchers("/sample/member").hasRole("USER");
             });
-            // login을 진행하면 기본 경로 설정 -> index.html(메인)페이지로 이동 또는 마지막으로 요청헀던 페이지로 이동
-            http.formLogin(login -> login.defaultSuccessUrl("/sample/member",true)
-                    .permitAll());
+            http.formLogin(login -> login.permitAll());
             return http.build();
     }
 }

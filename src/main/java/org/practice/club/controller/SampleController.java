@@ -23,4 +23,8 @@ public class SampleController {
     public void exAdmin() {
         log.info("exAdmin.......");
     }
+    @GetMapping("/index")
+    public void exIndex() {
+        log.info("exIndex.......");
+    }
 }
